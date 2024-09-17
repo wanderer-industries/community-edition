@@ -80,9 +80,6 @@ Let's do as it asks and populate these required environment variables with our o
 
 The following screenshot-annotated guide shows how to do it all in an easy way: just follow the Google-colored arrows!
 
-<details>
-<summary><b>View the guide</b></summary>
-
 ---
 
 Here's the outline of what we'll do:
