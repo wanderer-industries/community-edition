@@ -2,6 +2,7 @@ services:
   wanderer_db:
     image: postgres:16-alpine
     restart: always
+    network_mode: host
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -10,11 +11,19 @@ services:
   wanderer:
     image: wandererltd/community-edition:latest
     restart: always
-    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    command: sh -c "sleep 10 && /app/entrypoint.sh db createdb && /app/entrypoint.sh db migrate && /app/entrypoint.sh run"
     depends_on:
       - wanderer_db
+    network_mode: host
+    healthcheck:
+      disable: true
     ports:
-      - 127.0.0.1:8000:8000
+      - 8000:8000
+    environment:
+      - PHX_SERVER=true
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+      - ERL_AFLAGS=-proto_dist inet6_tcp
+      - ECTO_IPV6=true
     env_file:
       - wanderer-conf.env
 

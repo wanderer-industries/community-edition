@@ -122,7 +122,7 @@ Here's the outline of what we'll do:
 
 Once the aplication is created, you can find the **Client ID** and **Secret Key** in the Application Settings page.
 
-<img src="./images/aplication-settings.png">
+<img src="./images/application-settings.png">
 
 <details>
 
@@ -157,16 +157,50 @@ And then we decide on the [base URL](#base_url) where the instance would be acce
 <sub><kbd>wanderer-conf.env</kbd></sub>
 ```diff
 - WEB_APP_URL=replace-me
-+ WEB_APP_URL=http://localhost:4444
++ WEB_APP_URL=http://localhost:8000
 - SECRET_KEY_BASE=replace-me
 + SECRET_KEY_BASE=GLVzDZW18FzuS2gMcmBRVhwgd4Gu7YmSl/k/TqfTUXti7FLBd7aflXeQDdwCj6Cz
 - CLOAK_KEY=replace-me
 + CLOAK_KEY=dsxvbn5jxDd16az2QpsX5B8O+llxjQ6SJE2i5Bzx56I=
 ```
 
-We can start our instance now but the requests would be served over HTTP. Not cool! Let's configure [Caddy](https://caddyserver.com) to enable HTTPS.
+Now we can start everything together by running:
+
+<sub><kbd>console</kbd></sub>
+```console
+$ docker compose -f docker-compose.yml up -d
+[+] Running 19/19
+ ✔ wanderer_db 9 layers [⣿⣿⣿⣿⣿⣿⣿]          Pulled
+ ✔ wanderer 7 layers [⣿⣿⣿⣿⣿⣿⣿]             Pulled
+[+] Running 5/5
+ ✔ Network hosting_default                  Created
+ ✔ Container hosting-wanderer_db-1         Started
+ ✔ Container hosting-wanderer-1            Started
+```
+
+[The Wanderer instance](http://localhost:8000) will take some time to start. It will create the databases, run the migrations, and populate the database with the initial data.
+After about fifteen seconds you should be able to access your instance at the WEB_APP_URL and see the welcome screen.
+
+<img src="./images/welcome.png">
+
+#### Initialize EVE Online Data
+
+Wanderer uses the Eve Online Data to get information about the ships, systems, and additional information. This data is used to provide the information for the search results.
+
+* Go to Wanderer Admin page at `http://localhost:8000/admin`</br></br>
+* Click on "Update EVE DB Data" button
+
+<img src="./images/update-eve-db-data.png">
+
+* Wait for the data to be initialized
+
+> [!NOTE]
+> This step can take some time to complete. The data is cached in the database and will be used for the search results.
 
 #### Caddy
+
+We can start our instance now but the requests would be served over HTTP. Not cool! Let's configure [Caddy](https://caddyserver.com) to enable HTTPS.
+
 
 > [!TIP]
 > For other reverse-proxy setups please see [reverse-proxy](./reverse-proxy) docs.
