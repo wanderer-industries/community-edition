@@ -1,0 +1,8 @@
+version: "3.3"
+services:
+  wanderer:
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.wanderer.rule: "Host(`example.com`)" # change to your domain name
+      traefik.http.routers.wanderer.entrypoints: "websecure"
+      traefik.http.services.wanderer.loadbalancer.server.port: "8000"
