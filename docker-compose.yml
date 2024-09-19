@@ -1,4 +1,15 @@
 services:
+  eve-route-builder:
+    image: dansylvest/eve-route-builder:main
+    container_name: eve-route-builder
+    restart: always
+    networks:
+      wanderer-internal:
+    ports:
+      - 2001:2001
+    environment:
+      - PORT=2001
+
   wanderer_db:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -16,6 +27,7 @@ services:
     restart: always
     command: sh -c "sleep 10 && /app/entrypoint.sh db createdb && /app/entrypoint.sh db migrate && /app/entrypoint.sh run"
     depends_on:
+      - eve-route-builder
       - wanderer_db
     networks:
       wanderer-internal:
@@ -26,6 +38,7 @@ services:
       - 8000:8000
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@wanderer_db:5432/postgres
+      - CUSTOM_ROUTE_BASE_URL=http://eve-route-builder:2001
       - PHX_SERVER=true
       - ECTO_IPV6=false
     env_file:
