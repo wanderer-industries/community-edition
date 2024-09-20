@@ -183,6 +183,12 @@ After about fifteen seconds you should be able to access your instance at the WE
 
 <img src="./images/welcome.png">
 
+#### Authorize your first character
+
+Before continue setting up Wanderer, you need to authorize your first character. This is required to get the character's data from the Eve Online API.
+
+So you can configure Wanderer administrator account with your registered character ID later.
+
 #### Initialize EVE Online Data
 
 Wanderer uses the Eve Online Data to get information about the ships, systems, and additional information. This data is used to provide the information for the search results.
