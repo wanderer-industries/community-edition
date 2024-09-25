@@ -466,6 +466,30 @@ ECTO_IPV6=true
 
 ---
 
+### Administration
+
+Wanderer provides an Admin panel for managing the Wanderer instance. Use the following variables to configure it.
+
+---
+
+#### WANDERER_ADMIN_USERNAME
+
+Default: *admin*
+
+Configures the Admin username required to access the Admin panel.
+
+---
+
+#### WANDERER_ADMIN_PASSWORD
+
+Default: *not set*
+
+Configures the Admin password required to access the Admin panel (and Errors page) (using basic auth).
+
+**Note:** If not set, the Admin panel (and Errors page) will be accessible without authentication.
+
+---
+
 ## FAQ
 
 <details>
