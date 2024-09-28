@@ -284,7 +284,11 @@ Next we'll go over how to upgrade the instance when a new release comes out and 
 
 ## Upgrade
 
-Each new [release](https://github.com/wanderer-industries/wanderer/releases) contains information on how to upgrade to it from the previous version. This section outlines the general steps and explains the versioning.
+This section outlines the general steps and explains the versioning.
+
+Try to keep your instance up to date with the latest version. If you're using Docker Compose, you can use the `docker compose pull` command to update your containers and then run `docker compose up -d` to start them again.
+
+**Note:** You should stop docker contaners before upgrading to avoid data loss. If you're using Docker Compose, you can use the `docker compose stop` or `docker compose down` commands to stop your containers.
 
 ### Version management
 
