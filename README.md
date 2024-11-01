@@ -470,6 +470,20 @@ ECTO_IPV6=true
 
 ---
 
+#### CUSTOM_ROUTE_BASE_URL
+
+URL to running custom routes service (https://github.com/DanSylvest/eve-route-builder).
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+CUSTOM_ROUTE_BASE_URL=http://localhost:2001
+```
+
+**Note:** You can run the custom routes service locally with `docker run -p 2001:2001 dansylvest/eve-route-builder:latest`
+By default it's configured to run along with Wanderer using docker-compose.
+
+---
+
 ### Administration
 
 Wanderer provides an Admin panel for managing the Wanderer instance. Use the following variables to configure it.
@@ -491,6 +505,22 @@ Default: *not set*
 Configures the Admin password required to access the Admin panel (and Errors page) (using basic auth).
 
 **Note:** If not set, the Admin panel (and Errors page) will be accessible without authentication.
+
+---
+
+#### WANDERER_MAP_SUBSCRIPTION_CHARACTERS_LIMIT
+
+Default: 10000
+
+Configures the limit of active tracking characters per map.
+
+---
+
+#### WANDERER_MAP_SUBSCRIPTION_HUBS_LIMIT
+
+Default: 100
+
+Configures the limit of hubs can be used to calc routes.
 
 ---
 
