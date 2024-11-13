@@ -451,11 +451,28 @@ Wanderer uses PostgreSQL for storing user data. Use the following variables to c
 
 ---
 
+#### DATABASE_UNIX_SOCKET
+
+Default: not set
+
+Configures to use a Unix socket for connecting to PostgreSQL database.
+
+Example value: `/var/run/postgresql`
+
+> [!NOTE]
+> If you set DATABASE_UNIX_SOCKET, DATABASE_URL should be set to  database name (eg. `wanderer_db`).
+
+
+---
+
 #### DATABASE_URL
 
 Default: `postgres://postgres:postgres@wanderer_db:5432/wanderer_db`
 
 Configures the URL for PostgreSQL database.
+
+> [!NOTE]
+> If you set DATABASE_UNIX_SOCKET, DATABASE_URL should be set to  database name (eg. `wanderer_db`).
 
 ---
 
