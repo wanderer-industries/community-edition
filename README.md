@@ -236,6 +236,13 @@ Then we need to let Caddy know the domain name for which to issue the TLS certif
 
 <sub><kbd>[reverse-proxy/docker-compose.caddy-gen.yml](./reverse-proxy/docker-compose.caddy-gen.yml)</kbd></sub>
 ```diff
+  services:
+    caddy-gen:
+-     command: caddy reverse-proxy --from example.com --to :8000 # change 'example.com' to your domain name
++     command: caddy reverse-proxy --from wanderer.example.com --to :8000
+
+  ...
+
   wanderer:
     labels:
 -     virtual.host: "example.com" # change to your domain name
