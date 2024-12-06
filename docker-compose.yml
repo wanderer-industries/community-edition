@@ -32,11 +32,17 @@ services:
       disable: true
     ports:
       - 8000:8000
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@wanderer_db:5432/postgres
       - CUSTOM_ROUTE_BASE_URL=http://eve-route-builder:2001
       - PHX_SERVER=true
       - ECTO_IPV6=false
+      - ERL_AFLAGS=-proto_dist inet6_tcp
+      - ERL_MAX_PORTS=1024
     env_file:
       - wanderer-conf.env
 
