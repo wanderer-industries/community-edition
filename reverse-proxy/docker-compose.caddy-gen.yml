@@ -4,7 +4,7 @@ services:
     container_name: caddy-gen
     image: "wemakeservices/caddy-gen:latest"
     restart: always
-    command: caddy reverse-proxy --from example.com --to :8000 # change 'example.com' to your domain name
+    command: caddy reverse-proxy --from https://example.com/:443 --to http://example.com:8000/ # change 'example.com' to your domain name
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - caddy-certificates:/data/caddy
