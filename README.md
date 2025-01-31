@@ -297,6 +297,8 @@ Try to keep your instance up to date with the latest version. If you're using Do
 
 **Note:** You should stop docker contaners before upgrading to avoid data loss. If you're using Docker Compose, you can use the `docker compose stop` or `docker compose down` commands to stop your containers.
 
+You can also use the script located at **./scripts/deploy_wanderer.sh**
+
 ### Version management
 
 Wanderer CE follows [semantic versioning:](https://semver.org/) `MAJOR.MINOR.PATCH`
