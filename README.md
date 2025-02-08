@@ -548,6 +548,19 @@ Configures the limit of hubs can be used to calc routes.
 
 ---
 
+#### WANDERER_RESTRICT_MAPS_CREATION
+
+Default: false
+
+Restricts creation of new maps. Possible values are `true` (allow creation only by server admins, from the Admin panel), `false` (allow creation by any registered users).
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_RESTRICT_MAPS_CREATION="true"
+```
+
+---
+
 ## FAQ
 
 <details>
