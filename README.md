@@ -561,6 +561,45 @@ WANDERER_RESTRICT_MAPS_CREATION="true"
 
 ---
 
+#### WANDERER_MAP_CONNECTION_AUTO_EXPIRE_HOURS
+
+Default: 24
+
+Configures the timeout for map connections auto-expire.
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_MAP_CONNECTION_AUTO_EXPIRE_HOURS=24
+```
+
+---
+
+#### WANDERER_MAP_CONNECTION_AUTO_EOL_HOURS
+
+Default: 21
+
+Configures the timeout for map connections auto-EOL.
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_MAP_CONNECTION_AUTO_EOL_HOURS=21
+```
+
+---
+
+#### WANDERER_MAP_CONNECTION_EOL_EXPIRE_TIMEOUT_MINS
+
+Default: 60
+
+Configures the timeout for expired map connections auto-removal.
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_MAP_CONNECTION_EOL_EXPIRE_TIMEOUT_MINS=60
+```
+
+---
+
 ## FAQ
 
 <details>
