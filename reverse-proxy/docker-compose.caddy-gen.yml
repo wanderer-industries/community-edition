@@ -13,6 +13,8 @@ services:
       - "443:443"
     depends_on:
       - wanderer
+    networks:
+      web:
 
   wanderer:
     labels:
