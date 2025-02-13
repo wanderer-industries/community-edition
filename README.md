@@ -168,6 +168,7 @@ Now we can start everything together by running:
 
 <sub><kbd>console</kbd></sub>
 ```console
+$ docker network create web
 $ docker compose -f docker-compose.yml up -d
 [+] Running 19/19
  ✔ wanderer_db 9 layers [⣿⣿⣿⣿⣿⣿⣿]          Pulled
