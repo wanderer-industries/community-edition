@@ -239,8 +239,8 @@ Then we need to let Caddy know the domain name for which to issue the TLS certif
 ```diff
   services:
     caddy-gen:
--     command: caddy reverse-proxy --from example.com --to :8000 # change 'example.com' to your domain name
-+     command: caddy reverse-proxy --from wanderer.example.com --to :8000
+-     command: caddy reverse-proxy --from https://example.com/:443 --to http://example.com:8000/ # replace 'example.com' to your domain name
++     command: caddy reverse-proxy --from wanderer.example.com --to wanderer.example.com:8000
 
   ...
 
