@@ -1,127 +1,102 @@
-#!/bin/bash
-# backup_all.sh
+#!/usr/bin/env bash
 #
-# This script backs up all tables from a Postgres database running in a Docker container.
+# backup_data.sh
+# 
+# Creates a PostgreSQL backup (schema + data) in custom format (compressed).
+# Includes a basic integrity check with pg_restore --list, but will NOT fail
+# if we encounter exit code 141 (harmless SIGPIPE).
 #
-# It supports two possible container names:
-#   - For production: wanderer-wanderer_db-1 (target database: postgres)
-#   - For development: wanderer_devcontainer-db-1 (target database: wanderer_dev)
+# Usage: ./backup_data.sh
 #
-# The script performs the following steps:
-#   1. Auto-detects the running database container from a list of possible container names.
-#   2. Automatically determines the target database name based on the container name.
-#   3. Runs pg_dump with --data-only (backing up all tables) and writes to a timestamped SQL file.
-#   4. After a successful backup, scans the generated SQL file to summarize the number
-#      of rows backed up for each table by parsing the COPY commands.
-#
-# Database credentials (per your Docker Compose configuration):
-#   - User: postgres
-#   - Password: (set in the container)
-#
-# Note: This script backs up data only; it assumes that the schema is managed via migrations.
 
-set -e  # Exit immediately on error
+set -euo pipefail
 
-# Define colors for pretty logging
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-YELLOW="\033[1;33m"
-NC="\033[0m"  # No Color
-
-# Set backup directory (use an absolute path)
-BACKUP_DIR="/home/youruser/backups"   # <<<--- Adjust this to your desired backup folder
-mkdir -p "$BACKUP_DIR"   # Ensure the directory exists
-
-# Log file path (absolute)
-LOGFILE="${BACKUP_DIR}/daily_backup.log"
-
-echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}Starting Data Backup Process (All Tables)${NC}"
-echo -e "${GREEN}========================================${NC}"
-echo ""
-
-# List of possible Postgres container names (order does not matter)
+# ----- Configuration -----
+BACKUP_DIR="/app/wanderer/backup"
 POSSIBLE_CONTAINERS=("wanderer-wanderer_db-1" "wanderer_devcontainer-db-1")
-CONTAINER_NAME=""
+DB_USER="postgres"
 
-echo -e "${YELLOW}[INFO]${NC} Detecting running Postgres container..."
+# Create backup directory if not present
+mkdir -p "$BACKUP_DIR"
+
+# Detect the running container
+CONTAINER_NAME=""
 for container in "${POSSIBLE_CONTAINERS[@]}"; do
-  if docker inspect "$container" > /dev/null 2>&1; then
+  if docker inspect "$container" >/dev/null 2>&1; then
     CONTAINER_NAME="$container"
     break
   fi
 done
 
-if [ -z "$CONTAINER_NAME" ]; then
-  echo -e "${RED}[ERROR] No known Postgres container found. Checked: ${POSSIBLE_CONTAINERS[*]}${NC}"
+if [[ -z "$CONTAINER_NAME" ]]; then
+  echo "ERROR: No known Postgres container found. Checked: ${POSSIBLE_CONTAINERS[*]}"
   exit 1
 fi
 
-echo -e "${YELLOW}[INFO]${NC} Using database container: ${CONTAINER_NAME}"
-echo ""
-
-# Database configuration
-DB_USER="postgres"
+# Decide which database name to dump
+DB_NAME="postgres"
 if [[ "$CONTAINER_NAME" == *"devcontainer"* ]]; then
   DB_NAME="wanderer_dev"
-else
-  DB_NAME="postgres"
 fi
 
-echo -e "${YELLOW}[INFO]${NC} Target database: ${DB_NAME}"
-echo ""
+TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
+TMPFILE="/tmp/pg_backup_${TIMESTAMP}.dump"
+OUTPUT_FILE="${BACKUP_DIR}/pg_backup_${DB_NAME}_${TIMESTAMP}.dump"
 
-# Define output file name with a timestamp (using an absolute path)
-OUTPUT_FILE="${BACKUP_DIR}/pg_backup_all_$(date +'%Y%m%d_%H%M%S').sql"
-echo -e "${YELLOW}[INFO]${NC} Output file: ${OUTPUT_FILE}"
-echo -e "${GREEN}[INFO] Starting backup...${NC}"
-echo ""
+echo "====================================================="
+echo "Starting Full Backup (schema + data) of '${DB_NAME}'"
+echo "Container: ${CONTAINER_NAME}"
+echo "Timestamp: ${TIMESTAMP}"
+echo "====================================================="
+echo
 
-# Run pg_dump (data-only) for the entire database.
+# 1) Run pg_dump in custom format (compressed).
+echo "Running pg_dump (custom format)..."
+set +e
 docker exec -i "$CONTAINER_NAME" \
-  pg_dump -U "$DB_USER" -d "$DB_NAME" --data-only > "$OUTPUT_FILE"
+  pg_dump -U "$DB_USER" -d "$DB_NAME" -Fc > "$TMPFILE"
+DUMP_EXIT_CODE=$?
+set -e
 
-if [ $? -eq 0 ]; then
-  echo -e "${GREEN}[INFO] Backup successful. Output file: ${OUTPUT_FILE}${NC}"
-else
-  echo -e "${RED}[ERROR] Backup failed.${NC}"
+if [[ $DUMP_EXIT_CODE -ne 0 ]]; then
+  echo "ERROR: pg_dump failed with exit code $DUMP_EXIT_CODE."
+  rm -f "$TMPFILE" 2>/dev/null || true
   exit 1
 fi
 
-echo ""
-echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}Backup Summary (Rows per table)${NC}"
-echo -e "${GREEN}========================================${NC}"
+echo "pg_dump completed successfully."
+echo
 
-# Parse the backup file to count rows per table.
-# This awk script does the following:
-#   - When a line starts with "COPY", it extracts the table name and resets the counter.
-#   - For subsequent lines (data rows), it increments the counter.
-#   - When the terminator "\." is encountered, it prints the table name and row count.
-awk '
-BEGIN { OFS=": "; current_table=""; row_count=0; }
-/^COPY[[:space:]]+/ {
-  if (current_table != "") {
-    print "Table", current_table, "->", row_count, "row(s) backed up";
-  }
-  match($0, /^COPY[[:space:]]+([^[:space:]]+)/, arr);
-  current_table = arr[1];
-  row_count = 0;
-  next;
-}
-/^\\\./ {
-  if (current_table != "") {
-    print "Table", current_table, "->", row_count, "row(s) backed up";
-    current_table = "";
-  }
-  next;
-}
-{
-  if (current_table != "") {
-    row_count++;
-  }
-}
-' "$OUTPUT_FILE"
+# 2) Verify the dump by listing its contents with pg_restore --list.
+#    We'll treat exit code 141 (SIGPIPE) as success because it often occurs when
+#    pg_restore closes the pipe before cat finishes writing, but the dump is fine.
+echo "Verifying backup integrity with pg_restore --list..."
+set +o pipefail
+cat "$TMPFILE" | docker exec -i "$CONTAINER_NAME" pg_restore --list > /dev/null
+VERIFY_EXIT_CODE=$?
+set -o pipefail
 
-echo ""
-echo -e "${GREEN}[INFO] Backup process complete.${NC}"
+if [[ $VERIFY_EXIT_CODE -ne 0 && $VERIFY_EXIT_CODE -ne 141 ]]; then
+  echo "ERROR: pg_restore --list failed with exit code $VERIFY_EXIT_CODE, indicating possible corruption."
+  rm -f "$TMPFILE" 2>/dev/null || true
+  exit 1
+fi
+
+# If it's 0 or 141, we assume success.
+echo "Verification successful (exit code $VERIFY_EXIT_CODE). Backup file is valid."
+echo
+
+# 3) Move the temp file to the final output file
+mv "$TMPFILE" "$OUTPUT_FILE"
+echo "Backup saved to: $OUTPUT_FILE"
+
+# 4) (Optional) Generate an MD5 checksum (uncomment to enable)
+# echo "Generating MD5 checksum..."
+# md5sum "$OUTPUT_FILE" > "$OUTPUT_FILE.md5"
+# echo "Checksum stored in $OUTPUT_FILE.md5"
+
+echo
+echo "====================================================="
+echo "Backup process completed successfully!"
+echo "====================================================="
+

@@ -10,10 +10,10 @@
 
 # Directory where your backup files are stored.
 # (Ensure this is the same directory where backup_data.sh outputs its pg_backup_*.sql files.)
-BACKUP_DIR="."
+BACKUP_DIR="/app/wanderer/backup"
 
 # Directory where the backup_data.sh script is located.
-SCRIPT_DIR="."
+SCRIPT_DIR="/app/wanderer/scripts"
 
 # Log file for daily backups.
 LOGFILE="${BACKUP_DIR}/daily_backup.log"
