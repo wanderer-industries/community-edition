@@ -435,7 +435,7 @@ dsxvbn5jxDd16az2QpsX5B8O+llxjQ6SJE2i5Bzx56I=
 <sub><kbd>wanderer-conf.env</kbd></sub>
 ```env
 CLOAK_KEY=dsxvbn5jxDd16az2QpsX5B8O+llxjQ6SJE2i5Bzx56I=
-``````
+```
 
 ### Registration
 
@@ -472,7 +472,6 @@ Example value: `/var/run/postgresql`
 > [!NOTE]
 > If you set DATABASE_UNIX_SOCKET, DATABASE_URL should be set to  database name (eg. `wanderer_db`).
 
-
 ---
 
 #### DATABASE_URL
@@ -508,6 +507,28 @@ CUSTOM_ROUTE_BASE_URL=http://localhost:2001
 
 **Note:** You can run the custom routes service locally with `docker run -p 2001:2001 dansylvest/eve-route-builder:latest`
 By default it's configured to run along with Wanderer using docker-compose.
+
+---
+
+### EVE Online Integration
+
+Wanderer integrates with EVE Online for authentication and data. Use the following variables to configure it.
+
+---
+
+#### EVE_CLIENT_ID
+
+Default: not set
+
+Configures the EVE Online OAuth client ID required for authentication.
+
+---
+
+#### EVE_CLIENT_SECRET
+
+Default: not set
+
+Configures the EVE Online OAuth client secret required for authentication.
 
 ---
 
@@ -599,6 +620,51 @@ Configures the timeout for expired map connections auto-removal.
 <sub><kbd>wanderer-conf.env</kbd></sub>
 ```env
 WANDERER_MAP_CONNECTION_EOL_EXPIRE_TIMEOUT_MINS=60
+```
+
+---
+
+### Feature Toggles
+
+Wanderer provides several feature toggles to enable or disable specific functionality.
+
+---
+
+#### WANDERER_PUBLIC_API_DISABLED
+
+Default: `false`
+
+Disables the public API when set to `true`.
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_PUBLIC_API_DISABLED=true
+```
+
+---
+
+#### WANDERER_CHARACTER_API_DISABLED
+
+Default: `true`
+
+Disables the character API when set to `true`.
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_CHARACTER_API_DISABLED=false
+```
+
+---
+
+#### WANDERER_ZKILL_PRELOAD_DISABLED
+
+Default: `false`
+
+Disables zKillboard preloading when set to `true`.
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_ZKILL_PRELOAD_DISABLED=true
 ```
 
 ---
