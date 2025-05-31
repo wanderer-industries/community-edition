@@ -2,8 +2,7 @@ server {
 	# replace example.com with your domain name
 	server_name example.com;
 
-	listen 80;
-	listen [::]:80;
+	listen 443;
 
 	location / {
 	    allow all;
