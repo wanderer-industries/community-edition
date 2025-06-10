@@ -384,10 +384,6 @@ EVE_CLIENT_SECRET=GLVzqfTUXti7FLBd7aflXeQDdwCj6Cz
 WANDERER_INVITES=true
 ```
 
-Additional (advanced) giudes:
-
-[How to Enable Wallet Tracking in Wanderer](https://github.com/wanderer-industries/community-edition/tree/main/advanced)
-
 Here're the currently supported ENV vars:
 
 ### Required
@@ -670,6 +666,12 @@ Disables zKillboard preloading when set to `true`.
 ```env
 WANDERER_ZKILL_PRELOAD_DISABLED=true
 ```
+
+---
+
+## Additional (advanced) guides:
+
+[How to Enable Wallet Tracking in Wanderer](https://github.com/wanderer-industries/community-edition/tree/main/advanced)
 
 ---
 
