@@ -8,6 +8,19 @@ services:
     environment:
       - PORT=2001
 
+  wanderer-kills:
+    image: guarzo/wanderer-kills:v1.0
+    container-name: wanderer-kills
+    environment:
+      PORT: 4004
+      MIX_ENV: prod
+    networks:
+      wanderer-internal:
+      web:
+    ports:
+      - "4004:4004"
+    restart: unless-stopped
+
   wanderer_db:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -39,6 +52,8 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@wanderer_db:5432/postgres
       - CUSTOM_ROUTE_BASE_URL=http://eve-route-builder:2001
+      - WANDERER_KILLS_SERVICE_ENABLED=true
+      - WANDERER_KILLS_BASE_URL=ws://wanderer-kills:4004
       - PHX_SERVER=true
       - ECTO_IPV6=false
       - ERL_AFLAGS=-proto_dist inet6_tcp
