@@ -10,7 +10,7 @@ services:
 
   wanderer-kills:
     image: guarzo/wanderer-kills:v1.0
-    container-name: wanderer-kills
+    container_name: wanderer-kills
     environment:
       PORT: 4004
       MIX_ENV: prod
