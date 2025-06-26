@@ -62,7 +62,7 @@ You can **leave alt characters** using the base app credentials.
 
 ---
 
-# 📘 Configuring Additional ESI Tracking Pools in Wanderer (Community Edition)
+# 📘 Configuring Additional ESI Tracking Pools
 
 Wanderer Community Edition supports extending character tracking capacity by adding **up to 10 additional tracking pools**. Each tracking pool allows tracking **up to 300 characters by default**, configurable via an environment variable.
 
