@@ -59,3 +59,78 @@ You can **leave alt characters** using the base app credentials.
 ---
 
 ✅ **Done!** You’re now tracking character wallets in Wanderer.
+
+---
+
+# 📘 Configuring Additional ESI Tracking Pools in Wanderer (Community Edition)
+
+Wanderer Community Edition supports extending character tracking capacity by adding **up to 10 additional tracking pools**. Each tracking pool allows tracking **up to 300 characters by default**, configurable via an environment variable.
+
+---
+
+## 🔧 Step-by-Step: Add a New Tracking Pool
+
+### Register a New ESI App
+
+Each tracking pool requires its own ESI app registered with CCP.
+
+Follow the standard ESI app setup instructions here:  
+👉 [Wanderer ESI API Keys Setup](https://github.com/wanderer-industries/community-edition?tab=readme-ov-file#eve-api-keys)
+
+We recommend naming your apps with a postfix for easier tracking, such as:
+
+```
+Wanderer Production:1
+Wanderer Production:2
+…
+Wanderer Production:10
+```
+
+---
+
+### Update `wanderer-conf.env` File
+
+After registering the new ESI app:
+
+Add the credentials to your environment file using the following format:
+
+```env
+EVE_CLIENT_ID_1=<app_id_1>
+EVE_CLIENT_SECRET_1=<app_secret_1>
+
+EVE_CLIENT_ID_2=<app_id_2>
+EVE_CLIENT_SECRET_2=<app_secret_2>
+
+# ...up to EVE_CLIENT_ID_10 / EVE_CLIENT_SECRET_10
+```
+
+> 📝 Note: These variables support up to 10 tracking pools in total. DON'T add empty string variable, only for registered ID/SECRET
+
+### (Optional) Configure Pool Size Limit
+
+By default, each tracking pool handles up to 300 characters. You can override this with:
+
+```env
+WANDERER_TRACKING_POOL_MAX_SIZE=300
+```
+Adjust the value based on your infrastructure capacity and requirements.
+
+## 🔄 Automatic Distribution of Characters
+
+Once new pools are added and configured:
+	•	All newly authorized or re-authorized characters will be distributed across available pools.
+	•	The distribution is automatic and aims to balance the load across all pools.
+
+⸻
+
+## 📊 Monitoring Tracking Pools
+
+A new tracking pools widget available on admin page:
+
+```
+/admin
+```
+
+This interface allows you to:
+	•	View current character distribution per pool
+	•	Monitor pool load and identify when to scale further
