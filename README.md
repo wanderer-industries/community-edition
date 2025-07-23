@@ -566,7 +566,7 @@ Configures the limit of active tracking characters per map.
 
 #### WANDERER_MAP_SUBSCRIPTION_HUBS_LIMIT
 
-Default: 100
+Default: 10
 
 Configures the limit of hubs can be used to calc routes.
 
