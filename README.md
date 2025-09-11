@@ -585,6 +585,19 @@ WANDERER_RESTRICT_MAPS_CREATION="true"
 
 ---
 
+#### WANDERER_RESTRICT_ACLS_CREATION
+
+Default: false
+
+Restricts creation of new Access Lists. Possible values are `true`, `false` (allow creation by any registered users).
+
+<sub><kbd>wanderer-conf.env</kbd></sub>
+```env
+WANDERER_RESTRICT_ACLS_CREATION="true"
+```
+
+---
+
 #### WANDERER_MAP_CONNECTION_AUTO_EXPIRE_HOURS
 
 Default: 24
