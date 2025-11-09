@@ -17,8 +17,6 @@ services:
     networks:
       wanderer-internal:
       web:
-    ports:
-      - "4004:4004"
     restart: unless-stopped
 
   wanderer_db:
