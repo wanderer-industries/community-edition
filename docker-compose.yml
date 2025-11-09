@@ -16,7 +16,6 @@ services:
       MIX_ENV: prod
     networks:
       wanderer-internal:
-      web:
     restart: unless-stopped
 
   wanderer_db:
