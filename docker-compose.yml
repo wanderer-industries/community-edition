@@ -9,7 +9,7 @@ services:
       - PORT=2001
 
   wanderer-kills:
-    image: guarzo/wanderer-kills:latest
+    image: wandererltd/wanderer-kills:latest
     container_name: wanderer-kills
     environment:
       PORT: 4004
