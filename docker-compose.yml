@@ -12,8 +12,13 @@ services:
     image: wandererltd/wanderer-kills:latest
     container_name: wanderer-kills
     environment:
-      PORT: 4004
-      MIX_ENV: prod
+      - PORT=4004
+      - MIX_ENV=prod
+      - ESI_BASE_URL=https://esi.evetech.net/latest
+      - ESI_DATASOURCE=tranquility
+      - CACHE_KILLMAIL_TTL=300
+      - CACHE_SYSTEM_TTL=3600 
+      - CACHE_ESI_TTL=86400
     networks:
       wanderer-internal:
     restart: unless-stopped
