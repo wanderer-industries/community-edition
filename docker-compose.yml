@@ -21,6 +21,7 @@ services:
       - CACHE_ESI_TTL=86400
     networks:
       wanderer-internal:
+      web:
     restart: unless-stopped
 
   wanderer_db:
