@@ -1,6 +1,6 @@
 services:
   eve-route-builder:
-    image: dansylvest/eve-route-builder:main
+    image: wandererltd/eve-route-builder:main
     container_name: eve-route-builder
     restart: always
     networks:
