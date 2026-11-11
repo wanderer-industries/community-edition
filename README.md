@@ -510,6 +510,21 @@ By default it's configured to run along with Wanderer using docker-compose.
 
 ---
 
+#### Graph layout service
+
+The default Docker Compose setup includes the graph layout service used by managed map layouts. It is available only on the internal Docker network and does not expose a host port.
+
+The Compose setup configures Wanderer with:
+
+```env
+WANDERER_LAYOUT_SERVICE_ENABLED=true
+WANDERER_LAYOUT_SERVICE_BASE_URL=http://layout-service:3000
+```
+
+The layout service must report itself ready before the Wanderer container is started.
+
+---
+
 ### EVE Online Integration
 
 Wanderer integrates with EVE Online for authentication and data. Use the following variables to configure it.
