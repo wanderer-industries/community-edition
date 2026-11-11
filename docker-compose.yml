@@ -8,6 +8,16 @@ services:
     environment:
       - PORT=2001
 
+  layout-service:
+    image: wandererltd/graph-layout-service:latest
+    container_name: graph-layout-service
+    restart: unless-stopped
+    networks:
+      wanderer-internal:
+    environment:
+      - PORT=3000
+      - LAYOUT_WORKER_COUNT=2
+
   wanderer-kills:
     image: wandererltd/wanderer-kills:latest
     container_name: wanderer-kills
@@ -39,8 +49,12 @@ services:
     restart: always
     command: sh -c "sleep 10 && /app/entrypoint.sh db createdb && /app/entrypoint.sh db migrate && /app/entrypoint.sh run"
     depends_on:
-      - eve-route-builder
-      - wanderer_db
+      eve-route-builder:
+        condition: service_started
+      layout-service:
+        condition: service_healthy
+      wanderer_db:
+        condition: service_started
     networks:
       wanderer-internal:
       web:
@@ -57,6 +71,8 @@ services:
       - CUSTOM_ROUTE_BASE_URL=http://eve-route-builder:2001
       - WANDERER_KILLS_SERVICE_ENABLED=true
       - WANDERER_KILLS_BASE_URL=ws://wanderer-kills:4004
+      - WANDERER_LAYOUT_SERVICE_ENABLED=true
+      - WANDERER_LAYOUT_SERVICE_BASE_URL=http://layout-service:3000
       - PHX_SERVER=true
       - ECTO_IPV6=false
       - ERL_AFLAGS=-proto_dist inet6_tcp

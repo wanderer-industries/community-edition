@@ -24,14 +24,21 @@ EOF
 # Move into the project directory
 cd /app/wanderer
 
-# Pull the updated image
+# Pull the updated Wanderer and graph layout service images
 docker compose \
   --env-file .compose.env \
   -f docker-compose.yml \
   -f reverse-proxy/docker-compose.caddy-gen.yml \
-  pull wanderer
+  pull wanderer layout-service
 
-# Bring the service up using the updated environment
+# Recreate the layout service first and wait until it is ready
+docker compose \
+  --env-file .compose.env \
+  -f docker-compose.yml \
+  -f reverse-proxy/docker-compose.caddy-gen.yml \
+  up -d --force-recreate --no-deps --wait layout-service
+
+# Bring Wanderer up using the updated environment
 docker compose \
   --env-file .compose.env \
   -f docker-compose.yml \
